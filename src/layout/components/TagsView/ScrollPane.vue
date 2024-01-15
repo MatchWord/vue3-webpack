@@ -1,13 +1,6 @@
 <script setup>
-import { useTagsViewStore, TagView } from "@/store/modules/tagsView";
-import {
-  getCurrentInstance,
-  computed,
-  ref,
-  watch,
-  nextTick,
-  onMounted,
-} from "vue";
+import { useTagsViewStore } from "@/store/modules/tagsView";
+import { getCurrentInstance, computed, ref, onMounted } from "vue";
 const tagAndTagSpacing = ref(4);
 const { proxy } = getCurrentInstance();
 

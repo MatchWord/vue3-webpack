@@ -3,13 +3,14 @@ const path = require("path");
 const resolveSrc = (dir) => path.join(__dirname, "src", dir);
 // 常用的目录
 const commonDirs = [
-  "assets",
-  "directive",
-  "views",
-  "utils",
   "api",
-  "styles",
+  "assets",
+  "components",
+  "directive",
   "lang",
+  "views",
+  "styles",
+  "utils",
 ];
 // 按需引入ElementPlus组件
 const AutoImport = require("unplugin-auto-import/webpack");
@@ -33,7 +34,7 @@ module.exports = defineConfig({
     for (const dir of commonDirs) {
       config.resolve.alias.set(dir, resolveSrc(dir));
     }
-    // 内置的svg处理排除指定目录下的文件
+    // 内置的svg本地处理排除指定目录下的文件
     config.module.rule("svg").exclude.add(resolve("src/assets/icons")).end();
     config.module
       .rule("svg-sprite-loader")

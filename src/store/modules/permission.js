@@ -1,15 +1,14 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import { constantRoutes } from "@/router";
+import { constantRoutes } from "@/router"; // 获取静态路由表
 import { store } from "@/store";
-import { listRoutes } from "@/api/system/menu";
+import { listRoutes } from "@/api/system/menu"; // 获取动态路由的接口
 
-// const modules = import.meta.glob("../../views/**/**.vue");
-const modules = require.context("../../views/", true, /\.vue/);
+const modules = require.context("../../views/", true, /\.vue/).keys();
+
 const Layout = () => import("@/layout/index.vue");
-
 /**
- * Use meta.role to determine if the current user has permission
+ * 通过meta.role 判断当前用户是否有权限
  *
  * @param roles 用户角色集合
  * @param route 路由
@@ -47,25 +46,26 @@ const filterAsyncRoutes = (routes, roles) => {
     }
     // 判断用户(角色)是否有该路由的访问权限
     if (hasPermission(roles, tmpRoute)) {
-      if (tmpRoute.component?.toString() == "Layout") {
+      const component = tmpRoute.component;
+      if (component == "Layout") {
         tmpRoute.component = Layout;
       } else {
-        const component = modules[`../../views/${tmpRoute.component}.vue`];
-        if (component) {
-          tmpRoute.component = component;
+        // tmpRoute.component = (resolve) =>
+        //   require([`@/views/${component}`], resolve);
+        if (modules.includes(`./${component}.vue`)) {
+          tmpRoute.component = () => import(`@/views/${component}`);
         } else {
-          tmpRoute.component = modules[`../../views/error-page/404.vue`];
+          tmpRoute.component = () => import(`@/views/error-page/404.vue`);
         }
       }
-
       if (tmpRoute.children) {
         tmpRoute.children = filterAsyncRoutes(tmpRoute.children, roles);
       }
-
+      console.log("tmpRoute", tmpRoute);
       asyncRoutes.push(tmpRoute);
     }
   });
-
+  // console.log("asyncRoutes", asyncRoutes);
   return asyncRoutes;
 };
 

@@ -2,18 +2,20 @@ import router from "@/router";
 import { useUserStoreHook } from "@/store/modules/user";
 import { usePermissionStoreHook } from "@/store/modules/permission";
 
-import NProgress from "nprogress";
-import "nprogress/nprogress.css";
+import NProgress from "nprogress"; // 进度条插件
+import "nprogress/nprogress.css"; // 进度条样式
 
-NProgress.configure({ showSpinner: false }); // 进度条
+NProgress.configure({ showSpinner: false }); // 进度条配置文件
 
 const permissionStore = usePermissionStoreHook();
 
 // 白名单路由
-const whiteList = ["/login"];
+const whiteList = ["/login"]; // 没有重定向白名单
 
 router.beforeEach(async (to, from, next) => {
+  // 进度条开始
   NProgress.start();
+  // 确定用户是否已登录
   const hasToken = localStorage.getItem("accessToken");
   if (hasToken) {
     if (to.path === "/login") {
@@ -21,6 +23,7 @@ router.beforeEach(async (to, from, next) => {
       next({ path: "/" });
       NProgress.done();
     } else {
+      // 确定用户是否通过getinfo获取了权限角色
       const userStore = useUserStoreHook();
       const hasRoles = userStore.user.roles && userStore.user.roles.length > 0;
       if (hasRoles) {

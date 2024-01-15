@@ -10,7 +10,6 @@ import { useSettingsStore } from "@/store/modules/settings";
 import { usePermissionStore } from "@/store/modules/permission";
 const permissionStore = usePermissionStore();
 const { width } = useWindowSize();
-console.log("useWindowSize", useWindowSize);
 /**
  * 响应式布局容器固定宽度
  *
